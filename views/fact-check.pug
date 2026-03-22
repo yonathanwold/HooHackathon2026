@@ -1,0 +1,225 @@
+extends layout
+
+block content
+  section.fact-check-shell
+    .fact-check-hero
+      .fact-check-intro
+        span.eyebrow Author Credibility
+        h1 Author reliability and contradiction tracing.
+        p Assess an author’s claims across the public record, surface contradictions, and gauge credibility with sourced context.
+        .fact-check-chips
+          span.fact-chip Source triangulation
+          span.fact-chip Contradiction map
+          span.fact-chip Reliability score
+      .fact-check-callout
+        span.fact-check-callout__title Credibility ready
+        p Deliver a clean brief with citations you can validate, share, and archive.
+
+    .fact-check-grid
+      .fact-check-card
+        h2 Continue your investigation
+        p.fact-check-subtitle Enter the author you want to verify. Add a focus area if you want to narrow the search.
+        form(method='POST', action='/fact-check')
+          input(type='hidden', name='_csrf', value=_csrf)
+          label.fact-check-label(for='author') Author name
+          input#author.fact-check-input(type='text', name='author', placeholder='e.g. Jane Doe or @janedoe', value=form.author)
+          label.fact-check-label(for='publicationName') Publication (optional)
+          input#publicationName.fact-check-input(type='text', name='publicationName', placeholder='e.g. The Daily Ledger', value=form.publicationName)
+          label.fact-check-label(for='articleDate') Article date (optional)
+          input#articleDate.fact-check-input(type='text', name='articleDate', placeholder='e.g. 2026-03-22', value=form.articleDate)
+          label.fact-check-label(for='articleSource') Article source URL (optional)
+          input#articleSource.fact-check-input(type='text', name='articleSource', placeholder='https://...', value=form.articleSource)
+          label.fact-check-label(for='articleText') Article text (optional)
+          textarea#articleText.fact-check-input.fact-check-textarea(name='articleText', rows='6', placeholder='Paste the article text here for stance/tone analysis')= form.articleText
+          label.fact-check-label(for='focus') Focus area (optional)
+          input#focus.fact-check-input(type='text', name='focus', placeholder='e.g. cybersecurity breaches, election integrity', value=form.focus)
+          label.fact-check-label(for='timeframe') Timeframe
+          input#timeframe.fact-check-input(type='text', name='timeframe', placeholder='e.g. last 12 months', value=form.timeframe)
+          label.fact-check-label(for='seedSources') Source URLs (optional)
+          textarea#seedSources.fact-check-input.fact-check-textarea(name='seedSources', rows='3', placeholder='Paste links you want included, one per line')= form.seedSources
+          button.btn-primary.fact-check-submit(type='submit') Run author credibility check
+        .fact-check-note
+          span.fact-check-note__dot
+          span Results are grounded with sources so you can verify each claim.
+        .fact-check-scale
+          h3 How to read the score
+          p The reliability score is a 0–100 synthesis of consistency, sourcing quality, and recency. Higher scores indicate fewer contradictions and stronger evidence hygiene.
+          ul
+            li 90–100: High confidence. Consistent record with strong, recent, multi‑source corroboration.
+            li 75–89: Solid but not bulletproof. Mostly consistent, with limited gaps or older sources.
+            li 60–74: Mixed signals. Some inconsistencies or thin sourcing; verify before relying.
+            li 40–59: Low confidence. Frequent contradictions, unclear sourcing, or stale evidence.
+            li 0–39: Unreliable. Significant inconsistencies or weak sourcing; avoid without independent confirmation.
+          p.fact-check-scale__note Leaning is inferred from the author’s public positions across issues and is reported as left, center, or right when evidence is clear.
+        if errorMessage
+          .fact-check-panel
+            h3 Diagnostics
+            p= errorMessage
+            if errorDetail
+              pre.fact-check-debug= errorDetail
+
+      .fact-check-results
+        if results
+          if results.parsed
+            .fact-check-panel
+              h3 Summary
+              if results.parsed.as_of
+                span.fact-check-meta As of #{results.parsed.as_of}
+              p= results.parsed.summary
+            .fact-check-panel
+              h3 Reliability
+              .fact-check-score
+                span.fact-check-score__value= results.parsed.reliability_score
+                span.fact-check-score__label / 100
+              p= results.parsed.reliability_notes
+              if results.parsed.freshness_notes
+                p.fact-check-freshness= results.parsed.freshness_notes
+            if results.parsed.leaning
+              .fact-check-panel
+                h3 Leaning
+                - const leaning = (results.parsed.leaning || '').toLowerCase()
+                - const ideologySignals = results.parsed.ideology_signals || {}
+                - const dominant = (ideologySignals.dominant || leaning || '').toLowerCase()
+                - const signalSources = []
+                - if (ideologySignals.tone && ideologySignals.tone.toLowerCase() !== 'unclear') signalSources.push('tone')
+                - if (ideologySignals.past_bias && ideologySignals.past_bias.toLowerCase() !== 'unclear') signalSources.push('past bias')
+                - if (ideologySignals.model_crossref && ideologySignals.model_crossref.toLowerCase() !== 'unclear') signalSources.push('model cross-ref')
+                if dominant
+                  .fact-check-leaning-banner(class=`is-${dominant}`)
+                    span.fact-check-leaning-banner__label Detected Leaning
+                    span.fact-check-leaning-banner__value= dominant
+                p.fact-check-leaning(class=`is-${leaning}`)= results.parsed.leaning
+                if signalSources.length
+                  .fact-check-leaning-signals
+                    span.fact-check-meta Signals detected:
+                    each signal in signalSources
+                      span.fact-check-signal-chip= signal
+                - const displayConfidence = ideologySignals.confidence !== undefined && ideologySignals.confidence !== null
+                - const normalizedConfidence = displayConfidence && ideologySignals.confidence <= 1 ? Math.round(ideologySignals.confidence * 100) : ideologySignals.confidence
+                .fact-check-leaning-details
+                  if ideologySignals.tone && ideologySignals.tone.toLowerCase() !== 'unclear'
+                    .fact-check-leaning-row
+                      span.fact-check-leaning-label Overall tone
+                      span.fact-check-leaning-value= ideologySignals.tone
+                  if ideologySignals.past_bias && ideologySignals.past_bias.toLowerCase() !== 'unclear'
+                    .fact-check-leaning-row
+                      span.fact-check-leaning-label Past bias
+                      span.fact-check-leaning-value= ideologySignals.past_bias
+                  if ideologySignals.model_crossref && ideologySignals.model_crossref.toLowerCase() !== 'unclear'
+                    .fact-check-leaning-row
+                      span.fact-check-leaning-label Model cross-ref
+                      span.fact-check-leaning-value= ideologySignals.model_crossref
+                  if displayConfidence
+                    .fact-check-leaning-row
+                      span.fact-check-leaning-label Confidence
+                      span.fact-check-leaning-value= `${normalizedConfidence}/100`
+                if results.parsed.leaning_notes
+                  p.fact-check-freshness= results.parsed.leaning_notes
+            if results.parsed.intent_analysis
+              .fact-check-panel
+                h3 Author intent
+                if results.parsed.intent_analysis.stance_statement
+                  p= results.parsed.intent_analysis.stance_statement
+                if results.parsed.intent_analysis.stance_quotes && results.parsed.intent_analysis.stance_quotes.length
+                  .fact-check-links
+                    each quote in results.parsed.intent_analysis.stance_quotes
+                      span.fact-check-meta= quote
+                if results.parsed.intent_analysis.tone
+                  p
+                    strong Tone:
+                    |  #{results.parsed.intent_analysis.tone}
+                if results.parsed.intent_analysis.framing
+                  p
+                    strong Framing:
+                    |  #{results.parsed.intent_analysis.framing}
+                if results.parsed.intent_analysis.loaded_language && results.parsed.intent_analysis.loaded_language.length
+                  .fact-check-links
+                    each phrase in results.parsed.intent_analysis.loaded_language
+                      span.fact-check-meta= phrase
+                if results.parsed.intent_analysis.bias
+                  p
+                    strong Bias:
+                    |  #{results.parsed.intent_analysis.bias}
+                if results.parsed.intent_analysis.missing_voices
+                  p
+                    strong Missing voices:
+                    |  #{results.parsed.intent_analysis.missing_voices}
+                if results.parsed.intent_analysis.counterarguments
+                  p
+                    strong Counterarguments:
+                    |  #{results.parsed.intent_analysis.counterarguments}
+                if results.parsed.intent_analysis.author_goal
+                  p
+                    strong What the author wants you to believe:
+                    |  #{results.parsed.intent_analysis.author_goal}
+                if results.parsed.intent_analysis.call_to_action
+                  p
+                    strong Call to action:
+                    |  #{results.parsed.intent_analysis.call_to_action}
+                if results.parsed.intent_analysis.omissions
+                  p
+                    strong What’s left out:
+                    |  #{results.parsed.intent_analysis.omissions}
+                if results.parsed.intent_analysis.skeptical_questions && results.parsed.intent_analysis.skeptical_questions.length
+                  .fact-check-links
+                    each question in results.parsed.intent_analysis.skeptical_questions
+                      span.fact-check-meta= question
+                if results.parsed.intent_analysis.final_verdict
+                  p
+                    strong Final verdict:
+                    |  #{results.parsed.intent_analysis.final_verdict}
+            .fact-check-panel
+              h3 Contradictions
+              if results.parsed.contradictions && results.parsed.contradictions.length
+                each item in results.parsed.contradictions
+                  .fact-check-issue
+                    strong= item.topic
+                    p.fact-check-issue__text= item.statement_a
+                    p.fact-check-issue__text= item.statement_b
+                    if item.dates
+                      span.fact-check-meta= item.dates
+                    if item.sources && item.sources.length
+                      .fact-check-links
+                        each source in item.sources
+                          a.fact-check-link(href=source, target='_blank', rel='noreferrer') Source
+              else
+                p No contradictions found in the current sources.
+            .fact-check-panel
+              h3 Notable consistency
+              if results.parsed.notable_consistency && results.parsed.notable_consistency.length
+                each item in results.parsed.notable_consistency
+                  .fact-check-issue
+                    strong= item.topic
+                    p.fact-check-issue__text= item.summary
+                    if item.dates
+                      span.fact-check-meta= item.dates
+                    if item.sources && item.sources.length
+                      .fact-check-links
+                        each source in item.sources
+                          a.fact-check-link(href=source, target='_blank', rel='noreferrer') Source
+              else
+                p No consistent throughlines were highlighted for this author.
+            if results.sources && results.sources.length
+              .fact-check-panel
+                h3 Sources
+                .fact-check-sources
+                  each source in results.sources
+                    a.fact-check-source(href=source.uri, target='_blank', rel='noreferrer')= source.title
+            else
+              .fact-check-panel
+                h3 Sources
+                p No sources returned. Try again or add a source URL to seed the search.
+            if results.seedSources && results.seedSources.length
+              .fact-check-panel
+                h3 Provided sources
+                .fact-check-sources
+                  each source in results.seedSources
+                    a.fact-check-source(href=source, target='_blank', rel='noreferrer')= source
+          else
+            .fact-check-panel
+              h3 Raw output
+              p= results.rawText
+        else
+          .fact-check-placeholder
+            h3 Ready when you are
+            p Enter an author to generate a sourced reliability report.

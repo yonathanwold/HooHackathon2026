@@ -1,0 +1,81 @@
+﻿extends layout
+
+block head
+  meta(property='og:title', content='Tacitus Claims')
+  meta(property='og:description', content='Track and classify claims across sources.')
+
+block content
+  section.page-hero
+    .page-hero-inner
+      .page-copy.reveal
+        .eyebrow Claims
+        h1 Every claim is a decision waiting to be made.
+        p.lead Capture the statement, attach sources, and let Tacitus categorize it instantly.
+        .cta-row
+          a.btn-primary(href='/tacitus') Open Live Demo
+          a.btn-ghost(href='/threads') See Threads
+      .page-panel.reveal
+        .panel-kicker Claim Types
+        .type-stack
+          span.conflict Conflict
+          span.gap Gap
+          span.confirmed Confirmed
+          span.unverified Unverified
+
+  section.section
+    .section-head
+      h2 Claims Workspace
+      p A preview of the interface teams use to keep evidence structured.
+    .workspace-grid
+      .workspace-card.reveal
+        .workspace-head
+          span.badge conflict Conflict
+          button.mini Ask AI
+        h4 "The company knew about the vulnerability in Q3"
+        .tag-row
+          span.tag agrees Reuters - agrees
+          span.tag disagrees Company PR - disagrees
+        .note Direct contradiction on internal awareness.
+        .ai-box AI: Investigate internal emails and the timeline of alerts.
+      .workspace-card.reveal
+        .workspace-head
+          span.badge gap Gap
+          button.mini Ask AI
+        h4 "Regulators were notified within 72 hours"
+        .tag-row
+          span.tag agrees Company PR - agrees
+        .note Single-source assertion awaiting verification.
+        .ai-box AI: Request regulator correspondence.
+      .workspace-card.reveal
+        .workspace-head
+          span.badge confirmed Confirmed
+          button.mini Ask AI
+        h4 "The vulnerability was a known CVE pattern"
+        .tag-row
+          span.tag agrees Reuters - agrees
+          span.tag agrees Academic paper - agrees
+        .note Two independent sources confirm.
+        .ai-box AI: Map this CVE to prior incidents.
+
+  section.section
+    .section-head
+      h2 Claim Lifecycle
+      p How a claim moves from unverified to confirmed or conflict.
+    .feature-grid
+      .feature-card.reveal
+        h4 Start unverified
+        p Enter a claim before you have evidence so it stays on the radar.
+      .feature-card.reveal
+        h4 Add stances
+        p Each tagged source updates the claim classification automatically.
+      .feature-card.reveal
+        h4 Resolve conflicts
+        p Once contradictions are settled, the claim becomes confirmed or discarded.
+
+  section.section.cta
+    .cta-inner
+      h2 Keep every claim accountable.
+      p Tacitus ensures evidence drives the status of every statement.
+      .cta-row
+        a.btn-primary(href='/signup') Start Free
+        a.btn-ghost(href='/signup') Request Access

@@ -1,0 +1,512 @@
+extends layout
+block head
+  meta(property='og:title', content='Tacitus')
+  meta(property='og:description', content='Reality-check OS for casual journalists and curious readers.')
+  meta(property='og:type', content='website')
+  meta(property='og:url', content=siteURL)
+  meta(property='og:image', content=`${siteURL}/bootstrap-logo.svg`)
+  meta(name='twitter:card', content='summary_large_image')
+  meta(name='twitter:title', content='Tacitus')
+  meta(name='twitter:description', content='Reality-check OS for casual journalists and curious readers.')
+  meta(name='twitter:image', content=`${siteURL}/bootstrap-logo.svg`)
+
+block content
+  section.hero
+    .hero-orbit.hero-orbit-left
+    .hero-orbit.hero-orbit-right
+    .hero-inner
+      .hero-copy
+        .eyebrow Reality Check OS
+        .hero-kicker Built for casual journalists, community fact-checkers, and curious readers
+        h1 Tacitus helps you see what’s real, what’s missing, and what needs proof.
+        p.lead Feed in stories and sources, tag stances, and watch the system classify every statement as a conflict, gap, confirmed fact, or unverified. The AI layer then tells you exactly what to verify next.
+        .cta-row
+          a.btn-primary(href='#demo') Launch Demo
+          a.btn-ghost(href='#workflow') See How It Works
+        .proof-strip
+          span Reality-first workflow
+          span Reliability-aware signals
+          span AI next steps with context
+        .signal-row
+          .signal-card
+            h3 4
+            span Core concepts
+          .signal-card
+            h3 3
+            span Views
+          .signal-card
+            h3 5
+            span Truth buckets
+      .hero-panel.float
+        .panel-head
+          .panel-brand Taci
+            span tus
+          .panel-status Live Investigation
+        .panel-body
+          .panel-row
+            .panel-label Sources
+            .panel-pill reliable 2
+            .panel-pill contested 1
+            .panel-pill unreliable 1
+          .panel-claim
+            .panel-badge conflict pulse Conflict
+            p "The company knew about the vulnerability in Q3"
+            .panel-tags
+              span agrees Reuters - agrees
+              span disagrees Company PR - disagrees
+          .panel-claim
+            .panel-badge gap Gap
+            p "A patch was available but not deployed"
+            .panel-tags
+              span agrees Academic paper - agrees
+          .panel-ai
+            span AI Readout
+            p Evidence conflicts on internal awareness. Next step: obtain internal comms from Q3 and corroborate with a second independent outlet.
+      .hero-side
+        .hero-brief
+          .brief-label Why it wins
+          h3 A product story judges can understand in under ten seconds.
+          ul.brief-list
+            li Contradictions become visible immediately.
+            li Teams know what to verify next.
+            li Evidence stays attached to the statement.
+        .hero-note
+          span Live demo posture
+          p One click can flip a source stance, change a statement classification, and give the AI a brand-new investigative recommendation.
+
+  section.section.section-band
+    .section-head.compact
+      h2 Built for fast-moving stories
+      p When the facts are moving and sources disagree, Tacitus gives readers structure before the story gets away from them.
+    .band-grid
+      .band-card
+        .band-number 01
+        h3 Make disagreement legible
+        p See where sources align, where they split, and which statements are still hanging on single-source evidence.
+      .band-card
+        .band-number 02
+        h3 Prioritize the next move
+        p The UI is opinionated on purpose: conflicts rise first, gaps stay visible, and weak corroboration is hard to ignore.
+      .band-card
+        .band-number 03
+        h3 Present findings credibly
+        p Every statement keeps its sources, note, classification, and AI recommendation in one place for demos and real investigations.
+
+  section.section.demo-ticker
+    .section-head
+      h2 Live Demo Ticker
+      p Watch statements update in real time as sources change stance.
+    .ticker-wrap
+      .ticker-label Now Updating
+      .ticker-track#demoTicker
+        span.ticker-item "The company knew about the vulnerability in Q3" to Conflict
+        span.ticker-item "Over 2 million users were affected" to Conflict
+        span.ticker-item "A patch was available but not deployed" to Gap
+        span.ticker-item "Regulators were notified within 72 hours" to Gap
+        span.ticker-item "The vulnerability was a known CVE pattern" to Confirmed
+
+  section.section.walkthrough
+    .section-head
+      h2 How To Use Tacitus (60 seconds)
+      p A bite-size walkthrough for judges to see the flow instantly.
+    .walkthrough-card
+      .walkthrough-steps
+        .walk-step.active(data-step='0')
+          h3 Step 1: Add sources
+          p Add outlets, people, and documents. Set reliability to reliable, contested, or unreliable.
+        .walk-step(data-step='1')
+          h3 Step 2: Track a statement
+          p Type the statement you want to verify and hit Track.
+        .walk-step(data-step='2')
+          h3 Step 3: Tag stances
+          p Click source tags to cycle agrees, disagrees, untagged. Watch classification update.
+        .walk-step(data-step='3')
+          h3 Step 4: Ask AI
+          p Run Ask AI for a 2-3 sentence readout and a concrete next step.
+        .walk-step(data-step='4')
+          h3 Step 5: Follow Threads
+          p Jump to Threads to see conflicts, gaps, and red flags prioritized.
+      .walkthrough-controls
+        button.btn-ghost.small#walkPrev Previous
+        .walkthrough-dots
+          span.walk-dot.active(data-step='0')
+          span.walk-dot(data-step='1')
+          span.walk-dot(data-step='2')
+          span.walk-dot(data-step='3')
+          span.walk-dot(data-step='4')
+        button.btn-primary.small#walkNext Next
+
+  section#workflow.section
+    .section-head
+      h2 How It Works End To End
+      p A fast, repeatable loop that makes contradictions impossible to ignore.
+    .workflow-grid
+      .workflow-step
+        h3 1. Add sources
+        p Capture outlets, people, documents. Assign reliability and surface unreliable-only red flags instantly.
+      .workflow-step
+        h3 2. Track statements
+        p Enter the statements you need to verify, from impact numbers to internal timeline details.
+      .workflow-step
+        h3 3. Tag stances
+        p Click to cycle agrees, disagrees, untagged. The system auto-classifies every statement in real time.
+      .workflow-step
+        h3 4. Ask AI
+        p Run focused analysis on a statement or across the full case to get concrete next steps.
+
+  section.section
+    .section-head
+      h2 The Four Core Concepts
+      p Simple enough for fast triage and strong enough for deep dives.
+    .concept-grid
+      .concept-card
+        h3 Sources
+        p People, outlets, documents. Each source has a reliability rating: reliable, contested, unreliable.
+        .pill-row
+          span.pill Reliable
+          span.pill Contested
+          span.pill Unreliable
+      .concept-card
+        h3 Statements
+        p Track any statement across sources and let the system upgrade or downgrade its status.
+        ul.checklist
+          li Timeline awareness
+          li Impact figures
+          li Regulatory actions
+      .concept-card
+        h3 Stances
+        p Each source can agree, disagree, or remain untagged. You control the stance with one click.
+        .stance-demo
+          span.agree agrees
+          span.disagree disagrees
+          span.untagged untagged
+      .concept-card
+        h3 Types
+        p Every statement lives in one of four classifications that update automatically.
+        .type-stack
+          span.conflict Conflict
+          span.gap Gap
+          span.confirmed Confirmed
+          span.unverified Unverified
+
+  section.section#demo
+    .section-head
+      h2 Reality Desk
+      p The main command center for attaching sources, tagging stances, and storing evidence notes.
+    .workspace-grid
+      .workspace-card
+        .workspace-head
+          span.badge conflict Conflict
+          button.mini Ask AI
+        h4 "Over 2 million users were affected"
+        .tag-row
+          span.tag agrees Reuters - agrees
+          span.tag agrees Whistleblower - agrees
+          span.tag disagrees Company PR - disagrees
+        .note Evidence split between internal memo and company denial. Numbers do not reconcile.
+        .ai-box AI: Conflicting impact estimates. Next step: obtain regulator disclosure filings to triangulate the affected user count.
+      .workspace-card
+        .workspace-head
+          span.badge gap Gap
+          button.mini Ask AI
+        h4 "Regulators were notified within 72 hours"
+        .tag-row
+          span.tag agrees Company PR - agrees
+        .note Only the company claims this. No independent confirmation.
+        .ai-box AI: This is a single-source assertion. Next step: request timestamped regulator correspondence.
+      .workspace-card
+        .workspace-head
+          span.badge confirmed Confirmed
+          button.mini Ask AI
+        h4 "The vulnerability was a known CVE pattern"
+        .tag-row
+          span.tag agrees Reuters - agrees
+          span.tag agrees Academic paper - agrees
+        .note Two independent sources confirm. Treat as established fact.
+        .ai-box AI: Solid consensus. Next step: map this CVE to previous industry incidents for context.
+
+  section.section#threads
+    .section-head
+      h2 The Three Views
+      p Organized for speed: triage contradictions, follow threads, and interrogate the full case.
+    .views-grid
+      .view-card
+        h3 Statements
+        p Add statements, attach sources, cycle stances, and run per-statement AI.
+        ul
+          li One-click stance cycling
+          li Live classification badges
+          li AI notes per statement
+      .view-card
+        h3 Threads
+        p Auto-generated buckets that show what to chase first.
+        ul
+          li Active conflicts
+          li Gaps needing sourcing
+          li Unreliable-only flags
+      .view-card
+        h3 Ask Tacitus
+        p Ask any question across the entire investigation with context toggles.
+        ul
+          li Source-aware answers
+          li Specific statement references
+          li Actionable next steps
+
+  section.section#ask
+    .section-head
+      h2 AI Layer, Three Entry Points
+      p Purpose-built to sound like an investigative editor, not a chatbot.
+    .ai-grid
+      .ai-card
+        h3 Ask AI (per statement)
+        p Sends the statement, its classification, sources, stances, and note. Returns a 2-3 sentence analysis and one next step.
+      .ai-card
+        h3 Analyze All
+        p Runs sequentially across every statement with a staggered delay to avoid rate spikes.
+      .ai-card
+        h3 Ask Tacitus
+        p Uses your full case context to answer free-form questions that cite specific statements.
+
+  section.section
+    .section-head
+      h2 Extra Features for a Winning Demo
+      p Polished details that sell the product in a live pitch.
+    .feature-grid
+      .feature-card
+        h4 Reliability Heatmap
+        p Visualize which sources dominate the case and where corroboration is thin.
+      .feature-card
+        h4 Evidence Vault
+        p Store PDFs, links, quotes, and OCR snippets per statement with provenance tagging.
+      .feature-card
+        h4 Change Log
+        p Every stance edit is recorded with timestamp and editor for auditability.
+      .feature-card
+        h4 Red Flag Alerts
+        p Auto-alerts when a statement is supported only by unreliable sources.
+      .feature-card
+        h4 Timeline Mode
+        p Arrange statements chronologically to see narrative drift and missing steps.
+      .feature-card
+        h4 Export Pack
+        p Generate a case report with conflicts, gaps, and confirmed facts in one click.
+
+  section.section
+    .section-head
+      h2 Next Steps To Ship Tonight
+      p A fast checklist to turn the demo into a hackathon winner in under two hours.
+    .feature-grid
+      .feature-card
+        h4 Wire the AI endpoints
+        p Connect Ask AI and Ask Tacitus to your preferred model with a single server route and environment key.
+      .feature-card
+        h4 Save investigations
+        p Persist sources and statements to MongoDB with lightweight schemas so teams can reload cases.
+      .feature-card
+        h4 Export a report
+        p Generate a one-click PDF or markdown brief for judges with conflicts, gaps, and confirmed facts.
+      .feature-card
+        h4 Collaboration roles
+        p Add editor, reporter, and viewer roles with a basic invite flow.
+      .feature-card
+        h4 Live demo data
+        p Seed a single case with compelling statements and evidence links for presentation.
+      .feature-card
+        h4 Video walkthrough
+        p Record a 60-second product tour highlighting the contradictions map and AI next steps.
+
+  section.section
+    .section-head
+      h2 Demo Dashboard
+      p A live snapshot of the investigation so judges instantly grasp the impact.
+    .metrics-grid
+      .metric-card
+        h3 12
+        span Sources indexed
+      .metric-card
+        h3 28
+        span Statements tracked
+      .metric-card
+        h3 7
+        span Active conflicts
+      .metric-card
+        h3 14
+        span Confirmed facts
+      .metric-card
+        h3 5m
+        span Average AI turnaround
+      .metric-card
+        h3 0
+        span Untracked red flags
+
+  section.section
+    .section-head
+      h2 Why Judges Will Remember It
+      p Crisp positioning for the pitch: the product, the impact, and the moat.
+    .pitch-grid
+      .pitch-card
+        h4 The Pain
+        p Investigations break when sources disagree. Teams lose time deciding what matters most.
+      .pitch-card
+        h4 The Breakthrough
+        p Tacitus forces contradictions into the open and prioritizes what to verify next.
+      .pitch-card
+        h4 The Moat
+        p Reliability-aware statements graph plus AI next-step engine plus audit trail for every stance change.
+
+  section.section
+    .section-head
+      h2 Live Demo Script
+      p A 90-second flow designed for stage, quick and unforgettable.
+    .script-grid
+      .script-card
+        h3 1. Load the case
+        p Show sources, reliability scores, and initial statements.
+      .script-card
+        h3 2. Flip a stance
+        p Click one source tag to turn a statement into a conflict live.
+      .script-card
+        h3 3. Ask AI
+        p Run Ask AI on the conflict and read the suggested next step.
+      .script-card
+        h3 4. Threads view
+        p Show conflicts, gaps, and unreliable-only statements auto-bucketed.
+      .script-card
+        h3 5. Ask Tacitus
+        p Ask "What should I investigate next?" and get a concise plan.
+
+  section.section
+    .section-head
+      h2 Team And Roles
+      p Clear collaboration model for newsrooms, compliance, and audit teams.
+    .team-grid
+      .team-card
+        h4 Editor
+        p Oversees reliability ratings and final statement classification.
+      .team-card
+        h4 Investigator
+        p Adds sources and tags stances for live verification.
+      .team-card
+        h4 Analyst
+        p Runs AI reads and produces export briefs.
+      .team-card
+        h4 Observer
+        p Read-only access for leadership and legal review.
+
+  section.section
+    .section-head
+      h2 Roadmap After the Hackathon
+      p How this becomes a full product in four milestones.
+    .roadmap
+      .roadmap-step
+        .roadmap-dot
+        .roadmap-content
+          h4 Week 1-2: Evidence vault
+          p Attach PDFs, links, transcripts, and OCR snippets directly to statements.
+      .roadmap-step
+        .roadmap-dot
+        .roadmap-content
+          h4 Week 3-4: Case collaboration
+          p Multi-user editing, permissions, and reviewer signoff flows.
+      .roadmap-step
+        .roadmap-dot
+        .roadmap-content
+          h4 Week 5-6: Timeline mode
+          p Visual narrative timeline with chain-of-events insights.
+      .roadmap-step
+        .roadmap-dot
+        .roadmap-content
+          h4 Week 7-8: Export and sharing
+          p Generate PDF reports and data-room exports in one click.
+
+  section.section
+    .section-head
+      h2 Stack And Architecture
+      p Built on a modern, hackathon-ready stack with room to scale.
+    .stack-grid
+      .stack-card
+        h4 Frontend
+        p Pug + SCSS, responsive layout, motion, and live data components.
+      .stack-card
+        h4 Backend
+        p Node.js + Express with MongoDB for statement and source persistence.
+      .stack-card
+        h4 AI Layer
+        p Claude or OpenAI compatible routes with guardrails and rate control.
+      .stack-card
+        h4 Security
+        p Audit trail, source reliability checks, and reviewer workflows.
+
+  section.section
+    .section-head
+      h2 Pricing Preview
+      p Simple tiers to show a path to revenue without overcomplicating the pitch.
+    .pricing-grid
+      .pricing-card
+        h4 Starter
+        h3 $0
+        p For solo investigations and proof-of-concept cases.
+        ul
+          li 1 case
+          li 25 statements
+          li Basic AI
+      .pricing-card.featured
+        h4 Pro Newsroom
+        h3 $49 / month
+        p For teams that need reliability signals and export briefs.
+        ul
+          li Unlimited cases
+          li AI analysis packs
+          li Evidence vault
+      .pricing-card
+        h4 Enterprise
+        h3 Custom
+        p For regulators and compliance teams.
+        ul
+          li SSO + audit logs
+          li On-prem support
+          li Dedicated onboarding
+
+  section.section
+    .section-head
+      h2 Frequently Asked Questions
+      p Tight answers to unblock judge questions fast.
+    .faq-grid
+      .faq-card
+        h4 How do you determine a statement type?
+        p If a statement has at least one agree and one disagree it is a conflict. Two or more agrees with no disagreement is confirmed. One agree is a gap. No tags is unverified.
+      .faq-card
+        h4 What about unreliable sources?
+        p Statements supported only by unreliable sources are flagged as red flags and surfaced in Threads.
+      .faq-card
+        h4 Does AI change the classification?
+        p No. AI summarizes and recommends next steps. Humans control stances.
+      .faq-card
+        h4 Can I export the work?
+        p Yes. Export a brief with conflicts, gaps, and confirmed facts in one click.
+
+  section.section
+    .section-head
+      h2 Press Kit
+      p Everything judges need to remember the product after the demo.
+    .press-grid
+      .press-card
+        h4 One-liner
+        p Tacitus is the contradiction map for investigative teams.
+      .press-card
+        h4 Demo prompt
+        p "What should I investigate next?"
+      .press-card
+        h4 Tagline
+        p The historian who missed nothing.
+      .press-card
+        h4 Contact
+        p press@tacitus.ai
+
+  section.section.cta
+    .cta-inner
+      h2 Ready to ship an investigation in hours?
+      p Tacitus turns messy evidence into a structured truth map with AI-guided next steps.
+      .cta-row
+        a.btn-primary(href='/signup') Start a Case
+        a.btn-ghost(href='/signup') Request Demo

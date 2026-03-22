@@ -1,0 +1,49 @@
+﻿extends layout
+
+block head
+  meta(property='og:title', content='Tacitus Workflow')
+  meta(property='og:description', content='How Tacitus helps casual journalists track events, sources, and credibility.')
+
+block content
+  section.page-hero
+    .page-hero-inner
+      .page-copy.reveal
+        .eyebrow Workflow
+        h1 A practical loop for tracking what’s real.
+        p.lead Capture events, pull sources, and compare outlets so you can report with confidence.
+        .cta-row
+          a.btn-primary(href='/tacitus') Open Reality Desk
+          a.btn-ghost(href='/ask') Check Outlet Credibility
+      .page-panel.reveal
+        .panel-kicker Phase Map
+        ul.checklist
+          li Log the event and context
+          li Pull sources and label reliability
+          li Compare outlets and contradictions
+          li Track follow-ups until resolved
+
+  section.section
+    .section-head
+      h2 The Reality Desk Loop
+      p A simple workflow for casual journalists who need clarity fast.
+    .workflow-grid
+      .workflow-step.reveal
+        h3 1. Add an event
+        p Capture what happened and why it matters in one line.
+      .workflow-step.reveal
+        h3 2. Pull sources
+        p Let Gemini gather coverage and label reliability and bias.
+      .workflow-step.reveal
+        h3 3. Compare outlets
+        p See where coverage aligns, diverges, or contradicts.
+      .workflow-step.reveal
+        h3 4. Decide next step
+        p Get a short recommendation and log your follow-up.
+
+  section.section.cta
+    .cta-inner
+      h2 Turn scattered coverage into a clear next step.
+      p Tacitus helps curious readers track events, compare outlets, and decide what to verify next.
+      .cta-row
+        a.btn-primary(href='/signup') Start Free
+        a.btn-ghost(href='/signup') Talk to Us

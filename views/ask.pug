@@ -1,0 +1,82 @@
+﻿extends layout
+
+block head
+  meta(property='og:title', content='Ask Tacitus')
+  meta(property='og:description', content='Assess outlet credibility, contradictions, and source reliability in one place.')
+
+block content
+  section.page-hero
+    .page-hero-inner
+      .page-copy.reveal
+        .eyebrow Outlet Credibility
+        h1 Assess outlet reliability and contradiction patterns.
+        p.lead Score credibility, surface contradictions, and map what needs verification.
+      .page-panel.reveal
+        .panel-kicker Prompt Starters
+        ul.checklist
+          li How credible is this outlet over the last 12 months?
+          li Where has this outlet contradicted itself?
+          li Compare credibility between two outlets.
+
+  section.section
+    .section-head
+      h2 Outlet Credibility Interface
+      p A preview of how Tacitus assesses news outlets and contradictions.
+    .ask-pane
+      .chat.reveal
+        h4.example-title What you can ask
+        p.example-sub Try a prompt below or write your own.
+        .hints
+          button.hint(type='button', data-hint='How credible is this outlet?') How credible is this outlet?
+          button.hint(type='button', data-hint='Show contradictions by topic') Show contradictions by topic
+          button.hint(type='button', data-hint='Compare two outlets') Compare two outlets
+        .chat-log#askLog
+          .chat-msg.user "How credible is The Daily Ledger?"
+          .chat-msg.bot Credibility 68/100. Strong sourcing on economics, weak corrections policy. Two contradictions flagged in housing and transit coverage. Next step: verify housing claims against independent municipal reports.
+        .chat-input
+          input#askInput.input(type='text', placeholder='Ask about outlet credibility, contradictions, or comparisons...')
+          button#askBtn.btn(type='button') Submit
+      .context.reveal
+        h4 Outlet Signals
+        .context-item
+          input(type='checkbox', checked)
+          span Corrections policy published
+        .context-item
+          input(type='checkbox', checked)
+          span Source diversity score
+        .context-item
+          input(type='checkbox', checked)
+          span Contradiction history
+        .credibility-list
+          .credibility-item
+            span.credibility-name The Daily Ledger
+            span.credibility-score 68/100
+          .credibility-item
+            span.credibility-name Metro Wire
+            span.credibility-score 52/100
+          .credibility-item
+            span.credibility-name Capital Brief
+            span.credibility-score 81/100
+
+  section.section
+    .section-head
+      h2 Credibility Report Format
+      p Tacitus summarizes outlet reliability, contradictions, and action steps.
+    .feature-grid
+      .feature-card.reveal
+        h4 Credibility score
+        p A 0–100 score with a short rationale for reliability and sourcing quality.
+      .feature-card.reveal
+        h4 Contradiction map
+        p Where the outlet diverged across time or topics, with citations.
+      .feature-card.reveal
+        h4 Verification step
+        p A concrete next action for validating the outlet’s claims.
+
+  section.section.cta
+    .cta-inner
+      h2 Make every question actionable.
+      p Tacitus answers with clarity, not fluff.
+      .cta-row
+        a.btn-primary(href='/signup') Start Credibility Reports
+        a.btn-ghost(href='/signup') Request Access
