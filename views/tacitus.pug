@@ -1,0 +1,187 @@
+﻿extends layout
+
+block head
+  meta(property='og:title', content='Tacitus Event Desk')
+  meta(property='og:description', content='Track events, pull sources, and verify what’s real.')
+  meta(property='og:type', content='website')
+  meta(property='og:url', content=siteURL)
+
+block content
+  section.event-desk-hero
+    .event-desk-inner
+      .event-desk-copy
+        .eyebrow Event Desk
+        h1 Track events, pull sources, verify reality.
+        p.lead Add an event, and Tacitus will fetch sources from the web and label them as reliable, unreliable, and biased.
+        .cta-row
+          a.btn-ghost(href='/') Back to Home
+      .event-desk-panel
+        h4 What this does
+        ul.checklist
+          li Capture breaking events and key updates.
+          li Pull sources automatically with Gemini.
+          li Label reliability and bias in seconds.
+
+  section.event-desk
+    .event-desk-grid
+      .event-form-card
+        h2 Add an event
+        p.subtitle Keep a running log of conflicts, launches, and incidents.
+        form(method='POST', action='/events')
+          input(type='hidden', name='_csrf', value=_csrf)
+          label(for='title') Event title
+          input#title.input(type='text', name='title', placeholder='e.g. City Hall protest escalates', value=(form && form.title) ? form.title : '')
+          label(for='description') Short description (optional)
+          textarea#description.input(rows='3', name='description', placeholder='What happened and why it matters?')= (form && form.description) ? form.description : ''
+          .form-row
+            .form-field
+              label(for='category') Category
+              select#category.input(name='category')
+                option(value='conflict' selected=(form && form.category) === 'conflict') Conflict
+                option(value='release' selected=(form && form.category) === 'release') Release
+                option(value='cyber' selected=(form && form.category) === 'cyber') Cyber
+                option(value='politics' selected=(form && form.category) === 'politics') Politics
+                option(value='business' selected=(form && form.category) === 'business') Business
+                option(value='science' selected=(form && form.category) === 'science') Science
+                option(value='other' selected=(form && form.category) === 'other') Other
+            .form-field
+              label(for='region') Region
+              select#region.input(name='region')
+                option(value='global' selected=(form && form.region) === 'global') Global
+                option(value='na' selected=(form && form.region) === 'na') North America
+                option(value='eu' selected=(form && form.region) === 'eu') Europe
+                option(value='latam' selected=(form && form.region) === 'latam') LatAm
+                option(value='mea' selected=(form && form.region) === 'mea') MENA
+                option(value='apac' selected=(form && form.region) === 'apac') APAC
+          label(for='timeframe') Timeframe
+          input#timeframe.input(type='text', name='timeframe', placeholder='e.g. last 30 days', value=(form && form.timeframe) ? form.timeframe : 'last 30 days')
+          button.btn-primary(type='submit') Add event & fetch sources
+        .form-note
+          span.event-dot
+          span Gemini pulls sources and labels reliability automatically.
+      .event-list
+        .event-tabs
+          h2 Events
+          .tab-group
+            button.tab-btn.active(type='button', data-tab='open') Open
+            button.tab-btn(type='button', data-tab='archive') Archive
+        .events-tab#tab-open(style='display: block')
+          if !events || !events.length
+            .event-empty
+              h3 No events yet
+              p Add your first event to start tracking sources and updates.
+          else
+            each event in events
+              details.event-card
+                summary.event-card-head
+                  .event-title
+                    h3= event.title
+                    .event-status
+                      if event.status === 'resolved'
+                        span.status-pill Resolved
+                      else
+                        span.status-pill.open Open
+                      span.event-toggle
+                        span.event-toggle-open View details
+                        span.event-toggle-close Hide details
+                  .event-meta
+                    - const rawCategory = (event.category || '').trim()
+                    - const rawRegion = (event.region || '').trim()
+                    - const rawTimeframe = (event.timeframe || '').trim()
+                    - const categoryLabel = rawCategory === 'conflict' ? 'Conflict' : rawCategory === 'release' ? 'Release' : rawCategory === 'cyber' ? 'Cyber' : rawCategory === 'politics' ? 'Politics' : rawCategory === 'business' ? 'Business' : rawCategory === 'science' ? 'Science' : rawCategory === 'other' ? 'Other' : rawCategory
+                    - const regionLabel = rawRegion === 'na' ? 'North America' : rawRegion === 'eu' ? 'Europe' : rawRegion === 'latam' ? 'LatAm' : rawRegion === 'mea' ? 'MENA' : rawRegion === 'apac' ? 'APAC' : rawRegion === 'global' ? 'Global' : rawRegion
+                    - const timeframeLabel = rawTimeframe
+                    if categoryLabel
+                      span.meta-pill= categoryLabel
+                    if regionLabel
+                      span.meta-pill= regionLabel
+                    if timeframeLabel
+                      span.meta-pill= timeframeLabel
+                .event-card-body
+                  if event.description
+                    p.event-desc= event.description
+                  if event.source_summary
+                    p.event-summary= event.source_summary
+                  if event.source_error
+                    p.event-error= event.source_error
+                  .event-actions
+                    form(method='POST', action=`/events/${event._id}/refresh`)
+                      input(type='hidden', name='_csrf', value=_csrf)
+                      button.btn.small(type='submit') Refresh sources
+                    form(method='POST', action=`/events/${event._id}/resolve`)
+                      input(type='hidden', name='_csrf', value=_csrf)
+                      button.btn.small(type='submit') Mark resolved
+                    form(method='POST', action=`/events/${event._id}/delete`)
+                      input(type='hidden', name='_csrf', value=_csrf)
+                      button.btn.small.btn-danger(type='submit') Remove event
+                    if event.last_checked_at
+                      span.event-timestamp Last checked #{event.last_checked_at.toISOString().slice(0,16).replace('T',' ')}
+                  if event.sources && event.sources.length
+                    .event-sources
+                      each source in event.sources
+                        .event-source
+                          a(href=source.uri, target='_blank', rel='noreferrer')= source.title
+                          .source-meta
+                            span.source-pill(class=`is-${source.reliability}`)= source.reliability
+                            span.source-pill.bias(class=`is-${source.bias}`)= source.bias
+                            if source.published_at
+                              span.source-date= source.published_at
+                          if source.notes
+                            p.source-notes= source.notes
+        .events-tab#tab-archive(style='display: none')
+          if !resolvedEvents || !resolvedEvents.length
+            .event-empty
+              h3 No resolved events yet
+              p Resolve an event to move it into the archive.
+          else
+            each event in resolvedEvents
+              details.event-card
+                summary.event-card-head
+                  .event-title
+                    h3= event.title
+                    .event-status
+                      span.status-pill Resolved
+                      span.event-toggle
+                        span.event-toggle-open View details
+                        span.event-toggle-close Hide details
+                  .event-meta
+                    - const rawCategory = (event.category || '').trim()
+                    - const rawRegion = (event.region || '').trim()
+                    - const rawTimeframe = (event.timeframe || '').trim()
+                    - const categoryLabel = rawCategory === 'conflict' ? 'Conflict' : rawCategory === 'release' ? 'Release' : rawCategory === 'cyber' ? 'Cyber' : rawCategory === 'politics' ? 'Politics' : rawCategory === 'business' ? 'Business' : rawCategory === 'science' ? 'Science' : rawCategory === 'other' ? 'Other' : rawCategory
+                    - const regionLabel = rawRegion === 'na' ? 'North America' : rawRegion === 'eu' ? 'Europe' : rawRegion === 'latam' ? 'LatAm' : rawRegion === 'mea' ? 'MENA' : rawRegion === 'apac' ? 'APAC' : rawRegion === 'global' ? 'Global' : rawRegion
+                    - const timeframeLabel = rawTimeframe
+                    if categoryLabel
+                      span.meta-pill= categoryLabel
+                    if regionLabel
+                      span.meta-pill= regionLabel
+                    if timeframeLabel
+                      span.meta-pill= timeframeLabel
+                .event-card-body
+                  if event.description
+                    p.event-desc= event.description
+                  if event.source_summary
+                    p.event-summary= event.source_summary
+                  if event.source_error
+                    p.event-error= event.source_error
+                  .event-actions
+                    form(method='POST', action=`/events/${event._id}/reopen`)
+                      input(type='hidden', name='_csrf', value=_csrf)
+                      button.btn.small(type='submit') Reopen event
+                    form(method='POST', action=`/events/${event._id}/delete`)
+                      input(type='hidden', name='_csrf', value=_csrf)
+                      button.btn.small.btn-danger(type='submit') Remove event
+                    if event.last_checked_at
+                      span.event-timestamp Last checked #{event.last_checked_at.toISOString().slice(0,16).replace('T',' ')}
+                  if event.sources && event.sources.length
+                    .event-sources
+                      each source in event.sources
+                        .event-source
+                          a(href=source.uri, target='_blank', rel='noreferrer')= source.title
+                          .source-meta
+                            span.source-pill(class=`is-${source.reliability}`)= source.reliability
+                            span.source-pill.bias(class=`is-${source.bias}`)= source.bias
+                            if source.published_at
+                              span.source-date= source.published_at
+                          if source.notes
+                            p.source-notes= source.notes

@@ -1,0 +1,18 @@
+﻿header.site-header
+  .nav-wrap
+    a.brand(href='/')
+      span.brand-word
+        span.brand-mark Taci
+        span.brand-mark.em tus
+    nav.nav-links
+      a(href='/workflow') Workflow
+      a(href='/threads') Threads
+      a(href='/ask') Outlet Credibility
+      a(href='/fact-check') Author Credibility
+    .nav-cta
+      if !user
+        a.btn-ghost.small(href='/login') Log in
+        a.btn-primary.small(href='/signup') Start Free
+      else
+        a.btn-primary.small(href='/account') My Account
+        a.btn-ghost.small(href='/logout') Sign out

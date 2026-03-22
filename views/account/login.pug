@@ -1,0 +1,161 @@
+extends ../layout
+
+block content
+  section.tacitus-auth-shell
+    .tacitus-auth-layout
+      .tacitus-auth-card
+        .eyebrow Investigation Access
+        h1 Return to your caseboard.
+        p.auth-hero-copy Sign in to review contradictions, reopen claims, and continue following the evidence trail.
+
+        form.auth-stack(method='POST')
+          input(type='hidden', name='_csrf', value=_csrf)
+
+          .auth-card-panel
+            .auth-card-title Continue your investigation
+            .auth-field
+              label.auth-label(for='email') Email
+              input#email.auth-input-tacitus(type='email', name='email', placeholder='you@example.com', autofocus, autocomplete='email', required)
+
+            .auth-toggle-row
+              label.auth-check(for='loginByEmailLink')
+                input#loginByEmailLink.form-check-input(type='checkbox', name='loginByEmailLink')
+                span Email me a sign-in link instead
+
+            .auth-field.password-group
+              label.auth-label(for='password') Password
+              input#password.auth-input-tacitus(type='password', name='password', placeholder='Enter your password', autocomplete='current-password', required)
+
+            #biometricEmailOption.auth-toggle-row(style='display: none')
+              label.auth-check(for='useEmailWithBiometrics')
+                input#useEmailWithBiometrics.form-check-input(type='checkbox', name='useEmailWithBiometrics', checked)
+                span Use this email for passkey sign-in
+
+            .auth-actions-tacitus
+              button.btn-primary.auth-submit(type='submit') Continue
+              button#biometricLogin.btn-ghost.auth-passkey(type='submit', formaction='/login/webauthn-start', formmethod='POST', style='display: none')
+                i.fas.fa-fingerprint
+                span Use passkey
+
+            .auth-inline-note
+              i.fas.fa-user-shield
+              p Your account protects investigation notes, claim states, and linked evidence across sessions.
+
+            .auth-meta-tacitus
+              a.auth-link(href='/forgot') Forgot your password?
+              span Secure access for returning teams and solo investigators.
+
+        .auth-divider
+          span Or continue with
+
+        .auth-social-grid
+          a.auth-social-btn.auth-social-light(href='/auth/google')
+            i.fab.fa-google
+            span Google
+          a.auth-social-btn.auth-social-light(href='/auth/microsoft')
+            svg.ms-logo(xmlns='http://www.w3.org/2000/svg', width='18', height='18', viewBox='0 0 21 21', aria-hidden='true')
+              rect(x='1', y='1', width='9', height='9', fill='#f25022')
+              rect(x='1', y='11', width='9', height='9', fill='#00a4ef')
+              rect(x='11', y='1', width='9', height='9', fill='#7fba00')
+              rect(x='11', y='11', width='9', height='9', fill='#ffb900')
+            span Microsoft
+          a.auth-social-btn.auth-social-light(href='/auth/github')
+            i.fab.fa-github
+            span GitHub
+          a.auth-social-btn.auth-social-light(href='/auth/discord')
+            i.fab.fa-discord
+            span Discord
+          a.auth-social-btn.auth-social-light(href='/auth/facebook')
+            i.fab.fa-facebook-f
+            span Facebook
+          a.auth-social-btn.auth-social-light(href='/auth/linkedin')
+            i.fab.fa-linkedin-in
+            span LinkedIn
+          a.auth-social-btn.auth-social-light(href='/auth/x')
+            i.fab.fa-x-twitter
+            span X
+          a.auth-social-btn.auth-social-light(href='/auth/twitch')
+            i.fab.fa-twitch
+            span Twitch
+
+      .auth-demo-stage
+        .auth-demo-frame
+          .demo-bubble.demo-bubble-top
+            span.signal Prompt
+            p "Compare these breach claims and show me what to verify next."
+          .demo-card.demo-mini-card
+            .demo-mini-badge Live
+            .demo-mini-title Reuters, internal memo, and company PR attached
+            .demo-mini-graph
+              span
+              span
+              span
+              span
+          .demo-card.demo-main-card
+            .demo-screen-head
+              span.demo-screen-title Tacitus Demo
+              .demo-dots
+                span
+                span
+                span
+            .demo-claim-carousel
+              .demo-claim-slide.slide-a
+                .demo-badge.conflict Conflict
+                h3 "The company knew about the vulnerability in Q3"
+                .demo-pill-row
+                  span agrees Reuters agrees
+                  span disagrees PR disagrees
+              .demo-claim-slide.slide-b
+                .demo-badge.gap Gap
+                h3 "A patch was available but not deployed"
+                .demo-pill-row
+                  span agrees Academic paper agrees
+              .demo-claim-slide.slide-c
+                .demo-badge.confirmed Confirmed
+                h3 "The vulnerability matched a known CVE pattern"
+                .demo-pill-row
+                  span agrees Reuters agrees
+                  span agrees Paper agrees
+            .demo-timeline
+              .timeline-node.node-a
+              .timeline-node.node-b
+              .timeline-node.node-c
+              .timeline-beam
+          .demo-bubble.demo-bubble-bottom
+            span.signal AI Readout
+            p Conflicting evidence on internal awareness. Next step: obtain internal comms and corroborate with a second independent source.
+
+  script.
+    document.getElementById('loginByEmailLink').addEventListener('change', function () {
+      const passwordGroup = document.querySelector('.password-group');
+      const passwordInput = document.getElementById('password');
+      if (this.checked) {
+        passwordGroup.style.display = 'none';
+        passwordInput.removeAttribute('required');
+      } else {
+        passwordGroup.style.display = 'block';
+        passwordInput.setAttribute('required', '');
+      }
+    });
+
+    document.getElementById('useEmailWithBiometrics').addEventListener('change', function () {
+      const emailInput = document.getElementById('email');
+      if (this.checked) {
+        emailInput.setAttribute('required', '');
+      } else {
+        emailInput.removeAttribute('required');
+      }
+    });
+
+    document.querySelector('form').addEventListener('submit', function () {
+      if (document.getElementById('loginByEmailLink').checked) {
+        document.getElementById('password').value = '';
+      }
+    });
+
+    if (window.PublicKeyCredential) {
+      const biometricBtn = document.getElementById('biometricLogin');
+      const biometricEmailOption = document.getElementById('biometricEmailOption');
+      if (biometricBtn) biometricBtn.style.display = 'inline-flex';
+      if (biometricEmailOption) biometricEmailOption.style.display = 'flex';
+    }
