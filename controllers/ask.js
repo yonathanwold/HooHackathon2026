@@ -5,12 +5,23 @@ const DEFAULT_MODEL = 'gemini-2.5-flash';
 function buildAskPrompt(prompt) {
   return [
     'You are Tacitus, a credibility analyst for casual journalists.',
-    'Answer in 2-4 sentences.',
+    'Answer in 2-4 complete sentences. Do not cut off mid-sentence.',
     'Include: (1) credibility or contradiction signal, (2) brief rationale, (3) one concrete next step.',
     'Keep it neutral and avoid sensational language.',
     '',
     `User question: ${prompt}`,
   ].join('\n');
+}
+
+function normalizeReply(text) {
+  if (!text) return text;
+  const trimmed = text.trim();
+  const lastPunct = Math.max(trimmed.lastIndexOf('.'), trimmed.lastIndexOf('!'), trimmed.lastIndexOf('?'));
+  if (lastPunct >= 0 && lastPunct < trimmed.length - 1) {
+    return trimmed.slice(0, lastPunct + 1).trim();
+  }
+  if (!/[.!?]$/.test(trimmed)) return `${trimmed}.`;
+  return trimmed;
 }
 
 exports.postAsk = async (req, res) => {
@@ -40,7 +51,7 @@ exports.postAsk = async (req, res) => {
         ],
         generationConfig: {
           temperature: 0.3,
-          maxOutputTokens: 320,
+          maxOutputTokens: 520,
         },
       }),
     });
@@ -51,7 +62,8 @@ exports.postAsk = async (req, res) => {
     }
 
     const data = await response.json();
-    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    const replyRaw = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    const reply = normalizeReply(replyRaw || '');
     if (!reply) {
       return res.status(502).json({ ok: false, error: 'No response from Gemini.' });
     }

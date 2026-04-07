@@ -481,10 +481,19 @@ $(() => {
       setLoading(businessList, 'Loading business events...');
       setLoading(scienceList, 'Loading science events...');
 
+      const safeJson = async (res) => {
+        try {
+          return await res.json();
+        } catch (err) {
+          const text = await res.text();
+          return { ok: false, error: text || 'Invalid JSON response.' };
+        }
+      };
+
       try {
         const params = new URLSearchParams({ category, region, timeframe });
         const res = await fetch(`/events/buckets?${params.toString()}`);
-        const payload = await res.json();
+        const payload = await safeJson(res);
         if (!payload.ok) throw new Error(payload.error || 'Failed to load');
         renderList(conflictsList, payload.data.conflicts || [], 'conflict', 'conflict', regionForEvent, timeframeForEvent, csrfToken);
         renderList(releasesList, payload.data.releases || [], 'gap', 'release', regionForEvent, timeframeForEvent, csrfToken);
@@ -548,6 +557,15 @@ $(() => {
       appendMessage('user', prompt);
       const placeholder = appendMessage('bot', 'Thinking...');
       setLoading(true);
+      const safeJson = async (res) => {
+        try {
+          return await res.json();
+        } catch (err) {
+          const text = await res.text();
+          return { ok: false, error: text || 'Invalid JSON response.' };
+        }
+      };
+
       try {
         const res = await fetch('/api/ask', {
           method: 'POST',
@@ -557,7 +575,7 @@ $(() => {
           },
           body: JSON.stringify({ prompt }),
         });
-        const payload = await res.json();
+        const payload = await safeJson(res);
         if (!payload.ok) throw new Error(payload.error || 'Unable to answer right now.');
         placeholder.textContent = payload.reply;
       } catch (err) {

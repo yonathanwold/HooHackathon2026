@@ -1943,8 +1943,9 @@ details.event-card[open] .event-toggle {
 
 .ask-pane {
   display: grid;
-  grid-template-columns: 1fr 260px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
+  min-width: 0;
 }
 
 .chat {
@@ -1955,6 +1956,16 @@ details.event-card[open] .event-toggle {
   display: grid;
   gap: 10px;
   min-height: 360px;
+  overflow: visible;
+  min-width: 0;
+  width: 100%;
+}
+
+.chat-log {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .chat-msg {
@@ -1962,12 +1973,19 @@ details.event-card[open] .event-toggle {
   border-radius: 12px;
   font-size: 12px;
   line-height: 1.5;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  width: fit-content;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .chat-msg.user {
   background: #f4eee2;
   border: 1px solid #e2d8c7;
   justify-self: end;
+  max-width: 100%;
+  max-width: 90%;
 }
 
 .chat-msg.bot {
